@@ -1,0 +1,75 @@
+1. Connecting AWS with Python using Boto3
+
+Overview:
+Boto3 is the official AWS SDK for Python, allowing developers to easily integrate Python applications with AWS services like S3, EC2, and more. In this project, we focus on automating tasks with **S3**—such as creating buckets, uploading files, and listing objects.
+
+Steps:
+
+1. Install Boto3:
+   Use `pip` to install the library:
+   pip install boto3
+
+2. Set Up AWS CLI:
+   Before using Boto3, configure AWS credentials using the AWS CLI:
+   aws configure
+   Enter your "Access Key", "Secret Key", "Region", and "Output format".
+
+3. Connecting Python to S3:
+   Initialize a session and connect to S3:
+   import boto3
+   s3 = boto3.client('s3')
+
+4. Create an S3 Bucket:
+   Create a new bucket:
+   s3.create_bucket(Bucket='my-new-bucket')
+
+5. Upload a File to S3:
+   Upload files to your bucket:
+   s3.upload_file('local_file.txt', 'my-new-bucket', 'uploaded_file.txt')
+
+6. List Objects in S3:
+   Retrieve and print all objects in the bucket:
+   response = s3.list_objects(Bucket='my-new-bucket')
+   for content in response.get('Contents', []):
+       print(content['Key'])
+
+Summary:
+Using Boto3, you can easily connect Python to AWS, automate cloud storage tasks, and interact with AWS services programmatically.
+
+2. Automating Disk Space Monitoring with Python and Cron Job
+
+Overview:
+Automating disk space monitoring helps prevent system issues by triggering alerts when usage exceeds a critical threshold. Python's `shutil` and `schedule` modules are used to monitor disk space, with logs maintained for easy reference.
+1. Import Required Libraries:
+   Import necessary modules for disk monitoring and scheduling:
+  
+   import shutil
+   import logging
+   import schedule
+
+2. Set Up Logging:
+   Configure logging to track disk space usage:
+   logging.basicConfig(filename="logs.txt", level=logging.INFO)
+
+3. Disk Space Check Function:
+   Create a function to monitor disk usage and log warnings based on thresholds:
+   def check_disk():
+       disk = shutil.disk_usage('/')
+       percentage_used = (disk.total - disk.free) / disk.total * 100
+       
+       if percentage_used > 75:
+           logging.warning("Disk usage exceeded 75%")
+       elif percentage_used > 95:
+           logging.critical("Disk usage exceeded 95%")
+
+4. Automate with Schedule:
+   Set up the scheduler to run the `check_disk()` function every 10 seconds:
+   schedule.every(10).seconds.do(check_disk)
+   while True:
+       schedule.run_pending()
+       time.sleep(1)
+
+Summary:
+By combining Python and cron jobs, you can automate disk space monitoring. Alerts and logs keep you informed when disk space reaches critical levels, ensuring proactive system management.
+This project demonstrates how Python can seamlessly connect with AWS for cloud management using Boto3 while also ensuring your system’s health with automated disk space monitoring. Both processes—cloud automation and system monitoring—can run in parallel, offering a comprehensive automation solution.
+
